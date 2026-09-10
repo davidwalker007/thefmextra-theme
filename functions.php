@@ -62,6 +62,22 @@ function np_excerpt_more($more) {
 }
 add_filter('excerpt_more', 'np_excerpt_more');
 
+/**
+ * Drop WordPress's default "Category: " / "Tag: " / "Archives: " prefix on
+ * archive.php's <h1> — just the term/date name reads better as a page title.
+ */
+function np_archive_title($title) {
+	if (is_category()) {
+		$title = single_cat_title('', false);
+	} elseif (is_tag()) {
+		$title = single_tag_title('', false);
+	} elseif (is_author()) {
+		$title = get_the_author();
+	}
+	return $title;
+}
+add_filter('get_the_archive_title', 'np_archive_title');
+
 function np_excerpt_length($length) {
 	return 32;
 }
