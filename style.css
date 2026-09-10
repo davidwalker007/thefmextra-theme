@@ -205,9 +205,12 @@ p { margin: 0 0 1em; }
 }
 .content-main { min-width: 0; }
 
-.archive-header { margin-bottom: 32px; }
-.archive-header h1 { font-size: 1.9rem; }
-.archive-description { color: var(--color-text-light); }
+/* Full-width title band for page.php/archive.php/search.php — see
+   np_page_title_bar() in inc/template-tags.php. Sits flush against the nav
+   (first thing in <main>, no top margin) and bleeds edge-to-edge since it's
+   outside any .container; the inner .container realigns the text. */
+.page-title-bar { background: var(--color-accent); }
+.page-title-bar h1 { color: var(--color-white); font-size: 1.7rem; padding: 20px 0; margin: 0; }
 
 .article-list { display: flex; flex-direction: column; gap: 40px; }
 .article-card { display: flex; gap: 24px; padding-bottom: 40px; border-bottom: 1px solid var(--color-border); }
@@ -281,7 +284,6 @@ p { margin: 0 0 1em; }
    PLAIN PAGES — About Us, Staff, Subscription, etc.
    ========================================================================== */
 .page-content { padding-block: 56px 72px; }
-.page-content h1 { margin-bottom: 0.6em; }
 
 /* ==========================================================================
    RESPONSIVE — mobile nav behavior lives here; the rest is generic reflow.

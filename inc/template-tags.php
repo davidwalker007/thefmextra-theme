@@ -2,6 +2,17 @@
 if (!defined('ABSPATH')) exit;
 
 /**
+ * Full-width title band for page.php, archive.php, and search.php — sits
+ * flush against the nav bar, background bleeds edge-to-edge, text stays
+ * aligned with the rest of the page via the inner .container. $title_html
+ * is trusted, already-escaped output from a WP title function (get_the_title(),
+ * get_the_archive_title(), etc.), not raw user input.
+ */
+function np_page_title_bar($title_html) {
+	echo '<header class="page-title-bar"><div class="container"><h1>' . $title_html . '</h1></div></header>';
+}
+
+/**
  * Facebook's "Page Plugin" iframe embed — the modern, officially-supported
  * replacement for the old deprecated "Like Box" widget. Deliberately just an
  * iframe, not the full Facebook JS SDK: lighter, no third-party script

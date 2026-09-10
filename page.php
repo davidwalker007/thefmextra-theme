@@ -1,14 +1,14 @@
 <?php if (!defined('ABSPATH')) exit; get_header(); ?>
 
-<div class="container">
-	<div class="narrow page-content">
-		<?php while (have_posts()) : the_post(); ?>
+<?php while (have_posts()) : the_post(); ?>
+	<?php np_page_title_bar(get_the_title()); ?>
+	<div class="container">
+		<div class="narrow page-content">
 			<article <?php post_class(); ?>>
-				<h1><?php the_title(); ?></h1>
 				<?php the_content(); ?>
 			</article>
-		<?php endwhile; ?>
+		</div>
 	</div>
-</div>
+<?php endwhile; ?>
 
 <?php get_footer(); ?>
