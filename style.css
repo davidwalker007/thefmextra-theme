@@ -192,7 +192,7 @@ p { margin: 0 0 1em; }
 	display: grid;
 	grid-template-columns: 1fr 320px;
 	gap: 56px;
-	padding: 48px 0 72px;
+	padding-block: 48px 72px;
 	align-items: start;
 }
 .content-main { min-width: 0; }
@@ -271,13 +271,15 @@ p { margin: 0 0 1em; }
 /* ==========================================================================
    PLAIN PAGES — About Us, Staff, Subscription, etc.
    ========================================================================== */
-.page-content { padding: 56px 0 72px; }
+.page-content { padding-block: 56px 72px; }
 .page-content h1 { margin-bottom: 0.6em; }
 
 /* ==========================================================================
    RESPONSIVE — mobile nav behavior lives here; the rest is generic reflow.
    ========================================================================== */
 @media (max-width: 900px) {
+	.container { padding-inline: 20px; }
+
 	.content-with-sidebar { grid-template-columns: 1fr; gap: 48px; }
 	.article-card { flex-direction: column; }
 	.article-card-thumb { flex-basis: auto; }
