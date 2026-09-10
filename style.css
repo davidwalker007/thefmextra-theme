@@ -15,7 +15,7 @@ Text Domain: thefmextra-theme
 	--color-primary: #231f20;      /* main brand color — nav, headings, CTAs. Matches the logo's black. */
 	--color-primary-dark: #141212; /* footer / darkest shade */
 	--color-bg-alt: #f5f4f2;       /* alternating section background */
-	--color-accent: #ed1d25;       /* small accents — eyebrow text, links on dark bg. Matches the logo's red. */
+	--color-accent: #8b0000;       /* small accents — eyebrow text, links on dark bg. Darker red, client preference over the logo's brighter red. */
 	--color-white: #ffffff;
 	--color-text: #2b2b2b;
 	--color-text-light: #6b6b6b;
