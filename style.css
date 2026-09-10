@@ -12,10 +12,10 @@ Text Domain: thefmextra-theme
    generally not need to change for a new site.
    ========================================================================== */
 :root {
-	--color-primary: #1a2744;      /* main brand color — nav, headings, CTAs */
-	--color-primary-dark: #131d34; /* footer / darkest shade */
+	--color-primary: #231f20;      /* main brand color — nav, headings, CTAs. Matches the logo's black. */
+	--color-primary-dark: #141212; /* footer / darkest shade */
 	--color-bg-alt: #f5f4f2;       /* alternating section background */
-	--color-accent: #c9a96e;       /* small accents — eyebrow text, links on dark bg */
+	--color-accent: #ed1d25;       /* small accents — eyebrow text, links on dark bg. Matches the logo's red. */
 	--color-white: #ffffff;
 	--color-text: #2b2b2b;
 	--color-text-light: #6b6b6b;
