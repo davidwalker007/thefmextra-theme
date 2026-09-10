@@ -275,6 +275,7 @@ p { margin: 0 0 1em; }
 }
 .content-sidebar .widget img { border-radius: 3px; }
 .content-sidebar ul li { padding: 8px 0; border-bottom: 1px solid var(--color-border); font-size: 0.9rem; }
+.widget-facebook-page iframe { display: block; margin: 0 auto; }
 
 /* ==========================================================================
    PLAIN PAGES — About Us, Staff, Subscription, etc.
