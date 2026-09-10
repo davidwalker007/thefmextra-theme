@@ -19,6 +19,27 @@ function np_setup() {
 }
 add_action('after_setup_theme', 'np_setup');
 
+/**
+ * Social links, set under Appearance → Customize → Social Links.
+ * Only Facebook so far — add more the same way if a project needs them.
+ */
+function np_customize_register($wp_customize) {
+	$wp_customize->add_section('np_social', array(
+		'title'    => __('Social Links', 'wp-newspaper-theme'),
+		'priority' => 35,
+	));
+	$wp_customize->add_setting('facebook_url', array(
+		'default'           => '',
+		'sanitize_callback' => 'esc_url_raw',
+	));
+	$wp_customize->add_control('facebook_url', array(
+		'label'   => __('Facebook Page URL', 'wp-newspaper-theme'),
+		'section' => 'np_social',
+		'type'    => 'url',
+	));
+}
+add_action('customize_register', 'np_customize_register');
+
 function np_widgets_init() {
 	register_sidebar(array(
 		'name'          => __('Sidebar', 'wp-newspaper-theme'),

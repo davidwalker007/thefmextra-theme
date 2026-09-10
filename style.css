@@ -148,6 +148,14 @@ p { margin: 0 0 1em; }
 	font-size: 0.85rem;
 	text-align: center;
 }
+.social-links { margin-bottom: 16px; }
+.social-links a {
+	display: inline-flex; align-items: center; justify-content: center;
+	width: 36px; height: 36px; border-radius: 50%;
+	background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85);
+	transition: background 0.2s ease, color 0.2s ease;
+}
+.social-links a:hover { background: var(--color-accent); color: var(--color-white); }
 
 /* ==========================================================================
    SECTIONS / HERO — generic full-width band patterns
