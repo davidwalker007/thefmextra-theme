@@ -115,7 +115,6 @@ function np_article_meta() {
 		echo '<a class="category-tag" href="' . esc_url(get_category_link($categories[0]->term_id)) . '">' . esc_html($categories[0]->name) . '</a>';
 	}
 	echo '<span class="article-date">' . esc_html(get_the_date()) . '</span>';
-	echo '<span class="article-byline">' . esc_html(get_the_author()) . '</span>';
 	echo '</div>';
 }
 
