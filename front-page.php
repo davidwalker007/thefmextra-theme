@@ -113,8 +113,10 @@ if (!is_paged()) {
 					<?php if ($sec_thumb) : ?>
 						<a class="front-secondary-thumb" href="<?php echo esc_url(get_permalink($sec_post)); ?>"><?php echo $sec_thumb; ?></a>
 					<?php endif; ?>
-					<h3 class="front-secondary-title"><a href="<?php echo esc_url(get_permalink($sec_post)); ?>"><?php echo esc_html(get_the_title($sec_post)); ?></a></h3>
-					<?php np_article_meta(); ?>
+					<div class="front-secondary-body">
+						<h3 class="front-secondary-title"><a href="<?php echo esc_url(get_permalink($sec_post)); ?>"><?php echo esc_html(get_the_title($sec_post)); ?></a></h3>
+						<?php np_article_meta(); ?>
+					</div>
 				</article>
 			<?php endforeach; wp_reset_postdata(); ?>
 		</div>
