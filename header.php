@@ -21,11 +21,22 @@
 	</div>
 	<div class="top-bar">
 		<div class="container">
+			<?php
+			// David's call: the logo links to the Front Page category
+			// archive, not the homepage — the_custom_logo() always links
+			// home, so the logo is rendered manually here to point it
+			// wherever np_logo_link_url() resolves instead.
+			$np_logo_url = np_logo_link_url();
+			?>
 			<div class="logo">
-				<?php if (has_custom_logo()) : ?>
-					<?php the_custom_logo(); ?>
+				<?php if (has_custom_logo()) :
+					$np_logo_id = get_theme_mod('custom_logo');
+				?>
+					<a href="<?php echo esc_url($np_logo_url); ?>" class="custom-logo-link">
+						<?php echo wp_get_attachment_image($np_logo_id, 'full', false, array('class' => 'custom-logo')); ?>
+					</a>
 				<?php else : ?>
-					<a href="<?php echo esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a>
+					<a href="<?php echo esc_url($np_logo_url); ?>"><?php bloginfo('name'); ?></a>
 				<?php endif; ?>
 			</div>
 		</div>

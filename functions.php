@@ -1,6 +1,16 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
+/**
+ * The header logo links to the Front Page category archive instead of the
+ * homepage — David's call. Falls back to the homepage if that category ever
+ * goes missing, rather than linking to a 404.
+ */
+function np_logo_link_url() {
+	$cat_id = get_cat_ID('Front Page');
+	return $cat_id ? get_category_link($cat_id) : home_url('/');
+}
+
 function np_setup() {
 	add_theme_support('title-tag');
 	add_theme_support('post-thumbnails');
