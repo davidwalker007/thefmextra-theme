@@ -90,7 +90,7 @@ if (!is_paged()) {
 		<?php
 		$hero_post = get_post($np_hero_id);
 		setup_postdata($hero_post);
-		$hero_thumb = np_list_thumbnail_html();
+		$hero_thumb = np_list_thumbnail_html($hero_post);
 		?>
 		<article class="front-hero">
 			<?php if ($hero_thumb) : ?>
@@ -107,7 +107,7 @@ if (!is_paged()) {
 			<?php foreach ($np_secondary_ids as $sec_id) :
 				$sec_post = get_post($sec_id);
 				setup_postdata($sec_post);
-				$sec_thumb = np_list_thumbnail_html();
+				$sec_thumb = np_list_thumbnail_html($sec_post);
 			?>
 				<article class="front-secondary-card">
 					<?php if ($sec_thumb) : ?>
@@ -133,7 +133,7 @@ if (!is_paged()) {
 		<?php foreach ($np_news_ids as $news_id) :
 			$news_post = get_post($news_id);
 			setup_postdata($news_post);
-			$news_thumb = np_list_thumbnail_html();
+			$news_thumb = np_list_thumbnail_html($news_post);
 		?>
 			<article class="front-news-card">
 				<?php if ($news_thumb) : ?>

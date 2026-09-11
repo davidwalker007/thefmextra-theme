@@ -39,13 +39,34 @@ function np_facebook_page_embed($url, $width = 300, $height = 460) {
  * falls back to the first <img> found in the post content. Most of the site's
  * older posts were never given a featured image but do have a photo in the
  * body — this matches how the old theme displayed a photo per article.
+ *
+ * Takes the post explicitly (defaulting to the global $post, same as
+ * get_post(null)) rather than using no-args get_the_title()/get_the_content() —
+ * those two template tags default their $post parameter differently (null vs
+ * 0), so outside a real have_posts()/the_post() loop — e.g. front-page.php's
+ * manual setup_postdata() calls for the hero/secondary/Local News cards —
+ * get_the_title() silently returns an empty string while get_the_content()
+ * still works. That mismatch produced a real bug: an attachment's alt text
+ * came out as whatever post's title happened to still be in $post_title from
+ * PHP reusing the last real title string, not the actual current post.
  */
-function np_list_thumbnail_html() {
-	if (has_post_thumbnail()) {
-		return get_the_post_thumbnail(get_the_ID(), 'medium_large');
+function np_list_thumbnail_html($post = null) {
+	$post = get_post($post);
+	if (!$post) return '';
+	if (has_post_thumbnail($post)) {
+		return get_the_post_thumbnail($post, 'medium_large');
 	}
-	if (preg_match('/<img[^>]+src=["\']([^"\']+)["\']/i', get_the_content(), $matches)) {
-		return '<img src="' . esc_url($matches[1]) . '" alt="' . esc_attr(get_the_title()) . '" loading="lazy">';
+	$content = $post->post_content;
+	if (preg_match('/<img[^>]+src=["\']([^"\']+)["\']/i', $content, $matches)) {
+		return '<img src="' . esc_url($matches[1]) . '" alt="' . esc_attr($post->post_title) . '" loading="lazy">';
+	}
+	// Some posts' only image is a [gallery ids="1,2,3"] shortcode — that's
+	// literal shortcode text in the raw content, not an <img> tag, so it's
+	// invisible to the check above until the shortcode actually renders.
+	// Grab the first attached image directly instead.
+	if (preg_match('/\[gallery[^\]]*\bids=["\'](\d+)/i', $content, $matches)) {
+		$image = wp_get_attachment_image($matches[1], 'medium_large', false, array('alt' => $post->post_title, 'loading' => 'lazy'));
+		if ($image) return $image;
 	}
 	return '';
 }
