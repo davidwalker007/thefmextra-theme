@@ -105,18 +105,95 @@ function np_excerpt_length($length) {
 add_filter('excerpt_length', 'np_excerpt_length');
 
 /**
+ * These print-era section categories (Front Page, Home, etc.) were how the
+ * old site's layout was organized, not something a reader needs to see as a
+ * "category" on every article — every post has one, so showing it as a tag
+ * added no information. Real categories (Obituaries, Sports, etc.) still
+ * display normally.
+ */
+function np_is_layout_category($slug) {
+	return in_array($slug, array('front-page', 'front-page-archive', 'front-page-lead', 'home'), true);
+}
+
+/**
  * Byline + date + category tag, used by front-page.php, archive.php, and single.php.
  * Keeps that markup in one place instead of repeating it per template.
  */
 function np_article_meta() {
 	$categories = get_the_category();
+	$real_category = null;
+	foreach ($categories as $cat) {
+		if (!np_is_layout_category($cat->slug)) {
+			$real_category = $cat;
+			break;
+		}
+	}
 	echo '<div class="article-meta">';
-	if (!empty($categories)) {
-		echo '<a class="category-tag" href="' . esc_url(get_category_link($categories[0]->term_id)) . '">' . esc_html($categories[0]->name) . '</a>';
+	if ($real_category) {
+		echo '<a class="category-tag" href="' . esc_url(get_category_link($real_category->term_id)) . '">' . esc_html($real_category->name) . '</a>';
 	}
 	echo '<span class="article-date">' . esc_html(get_the_date()) . '</span>';
 	echo '</div>';
 }
+
+/**
+ * Decades of migrated content have no real per-post author (everything's
+ * attributed to a generic "admin" account from the import), but recent
+ * articles do carry a real byline as literal text in the body — a bolded
+ * 2-4 word name standing alone as the first real line, right after any
+ * leading image caption/gallery. Older archive posts don't reliably follow
+ * this pattern, so this only ever fires on content that matches tightly;
+ * anything else is left alone (no byline shown, nothing stripped).
+ */
+function np_extract_byline_and_strip($content) {
+	// \x{00A0} (non-breaking space) shows up constantly in this migrated
+	// content — e.g. "Nancy Edmonds Hanson\xc2\xa0</strong>" — and plain \s
+	// doesn't match it, so the /u modifier + explicit \x{00A0} is needed
+	// throughout or real bylines silently fail to match.
+	$stripped = preg_replace('/^[\s\x{00A0}]*(\[caption[^\]]*\].*?\[\/caption\][\s\x{00A0}]*|\[gallery[^\]]*\][\s\x{00A0}]*)+/isu', '', $content);
+	if (preg_match('/^[\s\x{00A0}]*<strong>[\s\x{00A0}]*([^<]{3,50}?)[\s\x{00A0}]*<\/strong>[\s\x{00A0}]*/iu', $stripped, $m)) {
+		$name = trim(preg_replace('/\x{00A0}/u', ' ', $m[1]));
+		// Looks like "Firstname Lastname" (2-4 capitalized words) — not a
+		// generic bolded phrase like "Free community meals".
+		if (preg_match('/^[A-Z][A-Za-z.\'-]*(?:\s+[A-Z][A-Za-z.\'-]*){1,3}$/u', $name)) {
+			$cleaned = str_replace($m[0], '', $content);
+			return array($name, $cleaned);
+		}
+	}
+	return array(null, $content);
+}
+
+/**
+ * Strip the byline paragraph from the rendered single-article body. Bylines
+ * aren't displayed anywhere on this site (too inconsistent across decades of
+ * migrated content to show reliably) — this just keeps the stray name out of
+ * the visible article text.
+ */
+function np_strip_byline_from_content($content) {
+	if (!is_singular('post')) return $content;
+	list($byline, $cleaned) = np_extract_byline_and_strip($content);
+	return $byline ? $cleaned : $content;
+}
+add_filter('the_content', 'np_strip_byline_from_content', 5);
+
+/**
+ * Without this, the byline paragraph (and often an image caption right
+ * before it) gets swept into WordPress's auto-generated excerpt with no
+ * separating punctuation — e.g. "Nancy Edmonds Hanson  Greater Moorhead
+ * Days draws to a close...". Only replaces the excerpt when a byline was
+ * actually detected; otherwise WordPress's default excerpt is untouched.
+ */
+function np_fix_byline_excerpt($excerpt, $post = null) {
+	$post = get_post($post);
+	if (!$post || $post->post_excerpt) return $excerpt;
+	list($byline, $cleaned) = np_extract_byline_and_strip($post->post_content);
+	if (!$byline) return $excerpt;
+	$text = strip_shortcodes($cleaned);
+	$text = str_replace(']]>', ']]&gt;', $text);
+	$text = wp_strip_all_tags($text);
+	return wp_trim_words($text, apply_filters('excerpt_length', 32), apply_filters('excerpt_more', ' &hellip;'));
+}
+add_filter('get_the_excerpt', 'np_fix_byline_excerpt', 5, 2);
 
 require get_template_directory() . '/inc/pagination.php';
 require get_template_directory() . '/inc/template-tags.php';
