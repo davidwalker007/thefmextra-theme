@@ -19,36 +19,6 @@
 	</div>
 	<?php endif; ?>
 
-	<?php
-	$np_obits = new WP_Query(array(
-		'category_name'  => 'obituaries',
-		'posts_per_page' => 3,
-		'post_status'    => 'publish',
-		'ignore_sticky_posts' => true,
-		'no_found_rows'  => true,
-	));
-	if ($np_obits->have_posts()) :
-	?>
-	<div class="widget widget-obituaries">
-		<h3 class="widget-title"><?php esc_html_e('Obituaries', 'thefmextra-theme'); ?></h3>
-		<ul>
-			<?php while ($np_obits->have_posts()) : $np_obits->the_post(); ?>
-				<li><a href="<?php the_permalink(); ?>">
-					<?php
-					// Obituaries are published as one daily roundup post, all
-					// literally titled "Obituaries" — the date is what actually
-					// tells them apart in a list like this.
-					echo (strtolower(trim(get_the_title())) === 'obituaries')
-						? esc_html(get_the_title() . ' — ' . get_the_date('M j'))
-						: esc_html(get_the_title());
-					?>
-				</a></li>
-			<?php endwhile; wp_reset_postdata(); ?>
-		</ul>
-		<a class="read-more" href="<?php echo esc_url(get_category_link(get_cat_ID('Obituaries'))); ?>"><?php esc_html_e('View all', 'wp-newspaper-theme'); ?></a>
-	</div>
-	<?php endif; ?>
-
 	<?php if ($np_facebook_url) : ?>
 		<div class="widget widget-facebook-page">
 			<h3 class="widget-title"><?php esc_html_e('Follow Us', 'wp-newspaper-theme'); ?></h3>

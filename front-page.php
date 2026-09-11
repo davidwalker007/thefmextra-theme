@@ -17,7 +17,7 @@ $np_news_ids = array();
 if (!is_paged()) {
 	$lead_query = new WP_Query(array(
 		'category_name'  => 'front-page-lead',
-		'posts_per_page' => 4,
+		'posts_per_page' => 3,
 		'post_status'    => 'publish',
 		'ignore_sticky_posts' => true,
 		'no_found_rows'  => true,
@@ -25,7 +25,7 @@ if (!is_paged()) {
 	if (!$lead_query->have_posts()) {
 		$lead_query = new WP_Query(array(
 			'category_name'  => 'front-page',
-			'posts_per_page' => 4,
+			'posts_per_page' => 3,
 			'post_status'    => 'publish',
 			'ignore_sticky_posts' => true,
 			'no_found_rows'  => true,
