@@ -116,6 +116,7 @@ if (!is_paged()) {
 					<div class="front-secondary-body">
 						<h3 class="front-secondary-title"><a href="<?php echo esc_url(get_permalink($sec_post)); ?>"><?php echo esc_html(get_the_title($sec_post)); ?></a></h3>
 						<?php np_article_meta(); ?>
+						<div class="front-secondary-excerpt"><?php echo wp_trim_words(wp_strip_all_tags(get_the_excerpt($sec_post)), 14, '&hellip;'); ?></div>
 					</div>
 				</article>
 			<?php endforeach; wp_reset_postdata(); ?>
