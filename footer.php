@@ -21,7 +21,6 @@
 				<li><a href="<?php echo esc_url(home_url('/e-editions/')); ?>"><?php esc_html_e('E-Edition', 'thefmextra-theme'); ?></a></li>
 				<li><a href="<?php echo esc_url(home_url('/living/')); ?>"><?php esc_html_e('Living Magazine', 'thefmextra-theme'); ?></a></li>
 				<li><a href="<?php echo esc_url(home_url('/communitymagazines/')); ?>"><?php esc_html_e('Community Magazines', 'thefmextra-theme'); ?></a></li>
-				<li><a href="<?php echo esc_url(get_category_link(get_cat_ID('Obituaries'))); ?>"><?php esc_html_e('Obituaries', 'thefmextra-theme'); ?></a></li>
 			</ul>
 		</div>
 		<div class="footer-col">

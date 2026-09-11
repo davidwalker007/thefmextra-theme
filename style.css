@@ -15,7 +15,8 @@ Text Domain: thefmextra-theme
 	--color-primary: #231f20;      /* main brand color — nav, headings, CTAs. Matches the logo's black. */
 	--color-primary-dark: #141212; /* footer / darkest shade */
 	--color-bg-alt: #f5f4f2;       /* alternating section background */
-	--color-accent: #8b0000;       /* small accents — eyebrow text, links on dark bg. Darker red, client preference over the logo's brighter red. */
+	--color-accent: #8b0000;       /* small accents — eyebrow text, tags, links on WHITE backgrounds. Darker red, client preference over the logo's brighter red. */
+	--color-accent-on-dark: #ff6b6b; /* red text/links on the dark footer/utility-bar backgrounds — --color-accent's contrast against near-black fails WCAG (~1.5:1); this passes comfortably (~5.6:1). */
 	--color-white: #ffffff;
 	--color-text: #2b2b2b;
 	--color-text-light: #6b6b6b;
@@ -89,7 +90,7 @@ p { margin: 0 0 1em; }
 }
 .utility-links a { color: rgba(255,255,255,0.75); margin-left: 20px; }
 .utility-links a:hover { color: var(--color-white); }
-.utility-links .utility-subscribe { color: #ff6b6b; font-weight: 700; }
+.utility-links .utility-subscribe { color: var(--color-accent-on-dark); font-weight: 700; }
 .utility-links .utility-subscribe:hover { color: var(--color-white); }
 
 /* ==========================================================================
@@ -385,8 +386,8 @@ p { margin: 0 0 1em; }
 }
 .footer-tagline { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
 .footer-links li { padding: 6px 0; }
-.footer-links a:hover { color: var(--color-accent); }
-.footer-email a:hover { color: var(--color-accent); }
+.footer-links a:hover { color: var(--color-accent-on-dark); }
+.footer-email a:hover { color: var(--color-accent-on-dark); }
 .footer-col .social-links { margin-top: 16px; margin-bottom: 0; }
 .site-footer .footer-bottom {
 	border-top: 1px solid rgba(255,255,255,0.15); padding-top: 20px; padding-bottom: 8px;
