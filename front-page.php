@@ -3,11 +3,16 @@
 /**
  * The front page previously just listed every post in one long undifferentiated
  * feed — no lead story, no sections, same treatment for a breaking headline as
- * a weekly BBQ column. This pulls a real lead + secondary stories from the
- * paper's own editorial categories (Front Page Lead, falling back to Front
- * Page) plus a Local News rail, then leaves everything else in the normal
- * feed below exactly as before. Only runs on page 1 — /page/2/ etc. just show
- * the plain feed, so pagination isn't affected.
+ * a weekly BBQ column. This pulls a real lead + secondary stories, plus a
+ * Local News rail, then leaves everything else in the normal feed below
+ * exactly as before. Only runs on page 1 — /page/2/ etc. just show the plain
+ * feed, so pagination isn't affected.
+ *
+ * The lead/secondary slots prefer whatever an editor has manually marked
+ * "Homepage Spotlight" (see the meta box added in functions.php), ordered by
+ * their chosen position — 1 = hero, 2-3 = secondary, blank sorts last. Any
+ * slots an editor hasn't filled fall back to the automatic category pick
+ * (Front Page Lead, then Front Page), same as before this feature existed.
  */
 $np_featured_ids = array();
 $np_hero_id = null;
@@ -15,23 +20,47 @@ $np_secondary_ids = array();
 $np_news_ids = array();
 
 if (!is_paged()) {
-	$lead_query = new WP_Query(array(
-		'category_name'  => 'front-page-lead',
+	$manual_query = new WP_Query(array(
+		'post_type'      => 'post',
 		'posts_per_page' => 3,
 		'post_status'    => 'publish',
+		'meta_key'       => '_fmx_featured',
+		'meta_value'     => '1',
+		'orderby'        => 'date',
+		'order'          => 'DESC',
 		'ignore_sticky_posts' => true,
 		'no_found_rows'  => true,
 	));
-	if (!$lead_query->have_posts()) {
-		$lead_query = new WP_Query(array(
-			'category_name'  => 'front-page',
+	$manual_posts = $manual_query->posts;
+	usort($manual_posts, function ($a, $b) {
+		$pos_a = (int) get_post_meta($a->ID, '_fmx_featured_position', true) ?: 999;
+		$pos_b = (int) get_post_meta($b->ID, '_fmx_featured_position', true) ?: 999;
+		return $pos_a <=> $pos_b;
+	});
+	$lead_ids = wp_list_pluck($manual_posts, 'ID');
+
+	if (count($lead_ids) < 3) {
+		$auto_query = new WP_Query(array(
+			'category_name'  => 'front-page-lead',
 			'posts_per_page' => 3,
 			'post_status'    => 'publish',
+			'post__not_in'   => $lead_ids,
 			'ignore_sticky_posts' => true,
 			'no_found_rows'  => true,
 		));
+		if (!$auto_query->have_posts()) {
+			$auto_query = new WP_Query(array(
+				'category_name'  => 'front-page',
+				'posts_per_page' => 3,
+				'post_status'    => 'publish',
+				'post__not_in'   => $lead_ids,
+				'ignore_sticky_posts' => true,
+				'no_found_rows'  => true,
+			));
+		}
+		$lead_ids = array_slice(array_merge($lead_ids, wp_list_pluck($auto_query->posts, 'ID')), 0, 3);
 	}
-	$lead_ids = wp_list_pluck($lead_query->posts, 'ID');
+
 	$np_hero_id = array_shift($lead_ids);
 	$np_secondary_ids = $lead_ids;
 

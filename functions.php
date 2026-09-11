@@ -195,5 +195,56 @@ function np_fix_byline_excerpt($excerpt, $post = null) {
 }
 add_filter('get_the_excerpt', 'np_fix_byline_excerpt', 5, 2);
 
+/**
+ * Lets an editor pin specific posts into the homepage hero/secondary spots
+ * instead of relying purely on category + publish date. Position 1 = lead
+ * story (hero), 2-3 = secondary. Position can be left blank — the post still
+ * counts as featured, it just sorts after positioned ones (see the ordering
+ * logic in front-page.php). If nothing on the site is marked featured, the
+ * homepage falls back to fully automatic category-based selection.
+ */
+function np_featured_meta_box() {
+	add_meta_box('np_featured_box', __('Homepage Spotlight', 'thefmextra-theme'), 'np_featured_meta_box_html', 'post', 'side', 'high');
+}
+add_action('add_meta_boxes', 'np_featured_meta_box');
+
+function np_featured_meta_box_html($post) {
+	wp_nonce_field('np_featured_save', 'np_featured_nonce');
+	$featured = get_post_meta($post->ID, '_fmx_featured', true);
+	$position = get_post_meta($post->ID, '_fmx_featured_position', true);
+	?>
+	<p>
+		<label>
+			<input type="checkbox" name="fmx_featured" value="1" <?php checked($featured, '1'); ?>>
+			<?php esc_html_e('Show in homepage spotlight', 'thefmextra-theme'); ?>
+		</label>
+	</p>
+	<p>
+		<label for="fmx_featured_position"><?php esc_html_e('Position (1 = lead story, 2-3 = secondary)', 'thefmextra-theme'); ?></label><br>
+		<input type="number" id="fmx_featured_position" name="fmx_featured_position" min="1" max="3" value="<?php echo esc_attr($position); ?>" style="width:60px;">
+	</p>
+	<p class="description"><?php esc_html_e('Leave unchecked to let the homepage choose automatically based on category and date.', 'thefmextra-theme'); ?></p>
+	<?php
+}
+
+function np_featured_save($post_id) {
+	if (!isset($_POST['np_featured_nonce']) || !wp_verify_nonce($_POST['np_featured_nonce'], 'np_featured_save')) return;
+	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+	if (!current_user_can('edit_post', $post_id)) return;
+
+	if (!empty($_POST['fmx_featured'])) {
+		update_post_meta($post_id, '_fmx_featured', '1');
+	} else {
+		delete_post_meta($post_id, '_fmx_featured');
+	}
+
+	if (isset($_POST['fmx_featured_position']) && $_POST['fmx_featured_position'] !== '') {
+		update_post_meta($post_id, '_fmx_featured_position', absint($_POST['fmx_featured_position']));
+	} else {
+		delete_post_meta($post_id, '_fmx_featured_position');
+	}
+}
+add_action('save_post', 'np_featured_save');
+
 require get_template_directory() . '/inc/pagination.php';
 require get_template_directory() . '/inc/template-tags.php';
