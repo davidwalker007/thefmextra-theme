@@ -19,13 +19,15 @@
 			</span>
 		</div>
 	</div>
-	<div class="container top-bar">
-		<div class="logo">
-			<?php if (has_custom_logo()) : ?>
-				<?php the_custom_logo(); ?>
-			<?php else : ?>
-				<a href="<?php echo esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a>
-			<?php endif; ?>
+	<div class="top-bar">
+		<div class="container">
+			<div class="logo">
+				<?php if (has_custom_logo()) : ?>
+					<?php the_custom_logo(); ?>
+				<?php else : ?>
+					<a href="<?php echo esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a>
+				<?php endif; ?>
+			</div>
 		</div>
 	</div>
 	<nav class="site-nav" id="site-nav">
