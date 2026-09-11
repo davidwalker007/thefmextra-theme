@@ -198,7 +198,7 @@ add_filter('get_the_excerpt', 'np_fix_byline_excerpt', 5, 2);
 /**
  * Lets an editor pin specific posts into the homepage hero/secondary spots
  * instead of relying purely on category + publish date. Position 1 = lead
- * story (hero), 2-3 = secondary. Position can be left blank — the post still
+ * story (hero), 2-5 = secondary. Position can be left blank — the post still
  * counts as featured, it just sorts after positioned ones (see the ordering
  * logic in front-page.php). If nothing on the site is marked featured, the
  * homepage falls back to fully automatic category-based selection.
@@ -220,8 +220,8 @@ function np_featured_meta_box_html($post) {
 		</label>
 	</p>
 	<p>
-		<label for="fmx_featured_position"><?php esc_html_e('Position (1 = lead story, 2-3 = secondary)', 'thefmextra-theme'); ?></label><br>
-		<input type="number" id="fmx_featured_position" name="fmx_featured_position" min="1" max="3" value="<?php echo esc_attr($position); ?>" style="width:60px;">
+		<label for="fmx_featured_position"><?php esc_html_e('Position (1 = lead story, 2-5 = secondary)', 'thefmextra-theme'); ?></label><br>
+		<input type="number" id="fmx_featured_position" name="fmx_featured_position" min="1" max="5" value="<?php echo esc_attr($position); ?>" style="width:60px;">
 	</p>
 	<p class="description"><?php esc_html_e('Leave unchecked to let the homepage choose automatically based on category and date.', 'thefmextra-theme'); ?></p>
 	<?php

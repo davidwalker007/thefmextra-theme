@@ -10,7 +10,7 @@
  *
  * The lead/secondary slots prefer whatever an editor has manually marked
  * "Homepage Spotlight" (see the meta box added in functions.php), ordered by
- * their chosen position — 1 = hero, 2-3 = secondary, blank sorts last. Any
+ * their chosen position — 1 = hero, 2-5 = secondary, blank sorts last. Any
  * slots an editor hasn't filled fall back to the automatic category pick
  * (Front Page Lead, then Front Page), same as before this feature existed.
  */
@@ -22,7 +22,7 @@ $np_news_ids = array();
 if (!is_paged()) {
 	$manual_query = new WP_Query(array(
 		'post_type'      => 'post',
-		'posts_per_page' => 3,
+		'posts_per_page' => 5,
 		'post_status'    => 'publish',
 		'meta_key'       => '_fmx_featured',
 		'meta_value'     => '1',
@@ -39,10 +39,10 @@ if (!is_paged()) {
 	});
 	$lead_ids = wp_list_pluck($manual_posts, 'ID');
 
-	if (count($lead_ids) < 3) {
+	if (count($lead_ids) < 5) {
 		$auto_query = new WP_Query(array(
 			'category_name'  => 'front-page-lead',
-			'posts_per_page' => 3,
+			'posts_per_page' => 5,
 			'post_status'    => 'publish',
 			'post__not_in'   => $lead_ids,
 			'ignore_sticky_posts' => true,
@@ -51,14 +51,14 @@ if (!is_paged()) {
 		if (!$auto_query->have_posts()) {
 			$auto_query = new WP_Query(array(
 				'category_name'  => 'front-page',
-				'posts_per_page' => 3,
+				'posts_per_page' => 5,
 				'post_status'    => 'publish',
 				'post__not_in'   => $lead_ids,
 				'ignore_sticky_posts' => true,
 				'no_found_rows'  => true,
 			));
 		}
-		$lead_ids = array_slice(array_merge($lead_ids, wp_list_pluck($auto_query->posts, 'ID')), 0, 3);
+		$lead_ids = array_slice(array_merge($lead_ids, wp_list_pluck($auto_query->posts, 'ID')), 0, 5);
 	}
 
 	$np_hero_id = array_shift($lead_ids);
