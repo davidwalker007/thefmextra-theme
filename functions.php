@@ -108,11 +108,13 @@ add_filter('excerpt_length', 'np_excerpt_length');
  * These print-era section categories (Front Page, Home, etc.) were how the
  * old site's layout was organized, not something a reader needs to see as a
  * "category" on every article — every post has one, so showing it as a tag
- * added no information. Real categories (Obituaries, Sports, etc.) still
- * display normally.
+ * added no information. "News" is excluded for the same reason — David's
+ * call: basically everything on this site is News, so the tag is redundant
+ * next to the date on nearly every article. Real categories that actually
+ * distinguish content (Obituaries, Sports, etc.) still display normally.
  */
 function np_is_layout_category($slug) {
-	return in_array($slug, array('front-page', 'front-page-archive', 'front-page-lead', 'home'), true);
+	return in_array($slug, array('front-page', 'front-page-archive', 'front-page-lead', 'home', 'news'), true);
 }
 
 /**
