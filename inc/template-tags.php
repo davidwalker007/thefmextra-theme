@@ -63,10 +63,27 @@ function np_list_thumbnail_html($post = null) {
 	// Some posts' only image is a [gallery ids="1,2,3"] shortcode — that's
 	// literal shortcode text in the raw content, not an <img> tag, so it's
 	// invisible to the check above until the shortcode actually renders.
-	// Grab the first attached image directly instead.
-	if (preg_match('/\[gallery[^\]]*\bids=["\'](\d+)/i', $content, $matches)) {
-		$image = wp_get_attachment_image($matches[1], 'medium_large', false, array('alt' => $post->post_title, 'loading' => 'lazy'));
-		if ($image) return $image;
+	// Look up the post's own attachments by post_parent rather than trusting
+	// the numeric IDs inside the shortcode text: those IDs are only valid on
+	// the site the post was originally written on. When a post is migrated
+	// in from another site (e.g. syncing new articles over from live), the
+	// importer remaps post_parent correctly for every attachment it brings
+	// over, but it has no way to know a bare number sitting inside arbitrary
+	// shortcode text is an attachment reference, so it never rewrites it —
+	// left pointing at whatever that ID happens to be locally, which is
+	// usually the wrong attachment or no attachment at all.
+	if (strpos($content, '[gallery') !== false) {
+		$attachments = get_posts(array(
+			'post_type'      => 'attachment',
+			'post_parent'    => $post->ID,
+			'posts_per_page' => 1,
+			'orderby'        => 'menu_order ID',
+			'order'          => 'ASC',
+		));
+		if (!empty($attachments)) {
+			$image = wp_get_attachment_image($attachments[0]->ID, 'medium_large', false, array('alt' => $post->post_title, 'loading' => 'lazy'));
+			if ($image) return $image;
+		}
 	}
 	return '';
 }
