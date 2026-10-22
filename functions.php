@@ -198,6 +198,26 @@ function np_fix_byline_excerpt($excerpt, $post = null) {
 add_filter('get_the_excerpt', 'np_fix_byline_excerpt', 5, 2);
 
 /**
+ * Lazy-load embedded iframes after the first one. The E-Editions pages stack
+ * dozens of FlipHTML5 flipbook embeds, and core's own lazy-loading skips them
+ * because they have no width/height attributes — so every flipbook loaded at
+ * once, which crawled on mobile. The first iframe stays eager so the current
+ * issue shows immediately.
+ */
+function np_lazy_load_iframes($content) {
+	if (stripos($content, '<iframe') === false || !class_exists('WP_HTML_Tag_Processor')) return $content;
+	$tags = new WP_HTML_Tag_Processor($content);
+	$seen = 0;
+	while ($tags->next_tag('iframe')) {
+		if ($seen++ > 0 && $tags->get_attribute('loading') === null) {
+			$tags->set_attribute('loading', 'lazy');
+		}
+	}
+	return $tags->get_updated_html();
+}
+add_filter('the_content', 'np_lazy_load_iframes', 20);
+
+/**
  * Lets an editor pin specific posts into the homepage hero/secondary spots
  * instead of relying purely on category + publish date. Position 1 = lead
  * story (hero), 2-5 = secondary. Position can be left blank — the post still
