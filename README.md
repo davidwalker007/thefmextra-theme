@@ -73,3 +73,14 @@ Forked from `wp-starter-theme`. First used to build thefmextra.com (2026-09).
 - `single.php` — single article view
 - `page.php` — plain content page (About, Staff, Subscription, etc.)
 - `404.php`, `index.php` — fallbacks
+- `mu-plugins/` — site-specific must-use plugins. These are **not** loaded from
+  the theme; copy each one to `wp-content/mu-plugins/` on the server.
+  - `fmx-paypal-shipping-address.php` — makes PayPal ask for a mailing
+    address at Print Subscription checkout
+  - `fmx-e-edition-auto-archive.php` — on the first WP-Cron tick of each
+    month, keeps the newest 4 issues on /e-editions/ and moves the rest to
+    the top of their year page under /e-editions/e-edition-archives/. It
+    creates new year pages and their archive links itself. It refuses to run,
+    and emails david@ instead, if the page isn't in the `<h1>` + iframe-wrapper
+    format. Pages are looked up by path, so it works on any host. Dry run:
+    `wp eval 'print_r( fmx_ee_archive_run( true ) );'`
