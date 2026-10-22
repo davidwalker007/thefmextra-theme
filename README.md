@@ -84,3 +84,11 @@ Forked from `wp-starter-theme`. First used to build thefmextra.com (2026-09).
     and emails david@ instead, if the page isn't in the `<h1>` + iframe-wrapper
     format. Pages are looked up by path, so it works on any host. Dry run:
     `wp eval 'print_r( fmx_ee_archive_run( true ) );'`
+  - `fmx-mail-auth.php` — DKIM-signs all site mail (selector `wp`, public key in
+    Cloudflare TXT `wp._domainkey.thefmextra.com`) and sets the return-path to
+    the From address so SPF aligns. Needs `FMX_DKIM_KEY` in wp-config.php
+    pointing at the private key, kept outside the web root (on Plesk:
+    `/var/www/vhosts/ncppub.com/private/thefmextra-dkim-wp.key`). **On a host
+    move:** copy the key, update the constant, and make sure the thefmextra.com
+    SPF record allows the new server's IP. It currently relies on `+mx`, and the
+    MX points at the Plesk box.
