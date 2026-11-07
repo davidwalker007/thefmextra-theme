@@ -92,3 +92,8 @@ Forked from `wp-starter-theme`. First used to build thefmextra.com (2026-09).
     move:** copy the key, update the constant, and make sure the thefmextra.com
     SPF record allows the new server's IP. It currently relies on `+mx`, and the
     MX points at the Plesk box.
+    **11/7/2026: live site moved to dwd-server-05 (SpinupWP, /sites/www.thefmextra.com).**
+    Mail now goes out through Easy WP SMTP's Brevo API mailer (From
+    noreply@thefmextra.com, domain authenticated in Brevo with brevo1/brevo2
+    DKIM records), which ignores PHPMailer's DKIM settings. `FMX_DKIM_KEY` was
+    deliberately not carried over, so this plugin now only sets the envelope sender.
